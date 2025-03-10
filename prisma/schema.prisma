@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/////////pour l'administrateur//////////////////////
+model admin {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String?
+  password      String
+  profileImages profileImage[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model profileImage {
+  id      Int    @id @default(autoincrement())
+  path    String
+  adminId Int
+  admin   admin  @relation(fields: [adminId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+/////////pour le newsletter//////////////////////
+model newsletter {
+  id               Int     @id @default(autoincrement())
+  email            String  @unique
+  unsubscribeToken String?
+}
+
+///////pour le blog//////////////////////
+model article {
+  id               Int      @id @default(autoincrement())
+  titre            String
+  contenu          String
+  categorieArticle String
+  images           image[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model image {
+  id        Int     @id @default(autoincrement())
+  path      String
+  articleId Int
+  article   article @relation(fields: [articleId], references: [id])
+}
