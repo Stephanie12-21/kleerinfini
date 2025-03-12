@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import Provider from "./context/Provider";
+import { Inter } from "next/font/google"; // ✅ Utilisation correcte de next/font/google
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Kleer Infini",
@@ -12,12 +15,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await getServerSession(); // Récupération de la session
+  const session = await getServerSession(); // ✅ Récupération correcte de la session
 
   return (
     <html lang="fr">
-      <head />
-      <body className="antialiased">
+      <body className={`${inter.className} antialiased`}>
         <Provider session={session}>{children}</Provider>
       </body>
     </html>
