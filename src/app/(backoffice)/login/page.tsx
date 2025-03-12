@@ -67,17 +67,23 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoSignUp = () => {
+    router.push("/signup");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md w-96"
       >
-        <h2 className="text-2xl font-bold mb-4 text-center">Connexion Admin</h2>
+        <h2 className="  text-center text-3xl font-extrabold text-indigo-900 mb-2">
+          Connexion
+        </h2>
         {errors.form && (
           <p className="text-red-500 text-sm mb-3">{errors.form}</p>
         )}
-        <div className="mb-4">
+        <div className="mb-4 space-y-2">
           <label className="block text-sm font-medium text-gray-700">
             Email
           </label>
@@ -86,13 +92,14 @@ const LoginPage = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 p-2 w-full border rounded-lg"
+            className="block w-full px-4 py-3 rounded-xl text-gray-900 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500
+             shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-opacity-50"
           />
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email}</p>
           )}
         </div>
-        <div className="mb-4">
+        <div className="mb-4 space-y-2">
           <label className="block text-sm font-medium text-gray-700">
             Mot de passe
           </label>
@@ -101,19 +108,30 @@ const LoginPage = () => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="mt-1 p-2 w-full border rounded-lg"
+            className="block w-full px-4 py-3 rounded-xl text-gray-900 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500
+             shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-opacity-50"
           />
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password}</p>
           )}
         </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
-        >
-          {isSubmitting ? "Connexion..." : "Se connecter"}
-        </button>
+        <div className=" mt-4 space-y-3">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? "Connexion..." : "Se connecter"}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleGoSignUp}
+            className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-xl shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            S&apos;inscrire
+          </button>
+        </div>
       </form>
     </div>
   );

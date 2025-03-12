@@ -113,6 +113,7 @@ const AdminPage = () => {
 
       setSubmitSuccess(true);
       setFormData({ name: "", email: "", password: "" });
+      router.push("/login");
 
       setTimeout(() => setSubmitSuccess(false), 5000);
     } catch (error) {

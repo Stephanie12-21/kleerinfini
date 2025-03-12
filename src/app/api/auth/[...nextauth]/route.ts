@@ -2,8 +2,6 @@ import NextAuth, { NextAuthOptions, User } from "next-auth";
 import { compare } from "bcrypt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
-import { JWT } from "next-auth/jwt";
-import { Session } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 type ExtendedUser = User & {
@@ -12,6 +10,15 @@ type ExtendedUser = User & {
   image?: string | null;
   name?: string | null;
 };
+
+declare module "next-auth" {
+  interface Session {
+    user: ExtendedUser;
+  }
+  interface User {
+    id: string;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db),
@@ -35,7 +42,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials): Promise<ExtendedUser | null> {
         if (!credentials?.email || !credentials.password) {
-          console.log("Credentials manquants");
+          console.error("Identifiants manquants");
           return null;
         }
 
@@ -45,7 +52,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!existingComptePerso) {
-          console.log("Utilisateur non trouvé");
+          console.error("Utilisateur non trouvé");
           return null;
         }
 
@@ -53,8 +60,9 @@ export const authOptions: NextAuthOptions = {
           credentials.password,
           existingComptePerso.password
         );
+
         if (!passwordMatch) {
-          console.log("Mot de passe incorrect");
+          console.error("Mot de passe incorrect");
           return null;
         }
 
@@ -63,14 +71,11 @@ export const authOptions: NextAuthOptions = {
           existingComptePerso.email
         );
 
-        const imageUrl =
-          existingComptePerso.profileImages.length > 0
-            ? existingComptePerso.profileImages[0].path
-            : null;
+        const imageUrl = existingComptePerso.profileImages?.[0]?.path ?? null;
 
         return {
           id: existingComptePerso.id.toString(),
-          name: existingComptePerso.name,
+          name: existingComptePerso.name ?? null,
           email: existingComptePerso.email,
           image: imageUrl,
         };
@@ -79,25 +84,22 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User | ExtendedUser }) {
+    async jwt({ token, user }) {
       if (user) {
-        if ("email" in user) {
-          token.email = user.email || "";
-        }
-        token.id = user?.id || null;
-        token.picture = user?.image || null;
-        token.name = user?.name || null;
+        token.id = user.id;
+        token.email = user.email ?? "";
+        token.picture = user.image ?? null;
+        token.name = user.name ?? null;
       }
       return token;
     },
 
-    async session({ session, token }: { session: Session; token: JWT }) {
+    async session({ session, token }) {
       session.user = {
-        ...session.user,
-        id: token.id || null,
-        name: token.name || null,
-        email: token.email || null,
-        image: token.picture || null,
+        id: token.id as string,
+        name: token.name ?? null,
+        email: token.email ?? "",
+        image: token.picture ?? null,
       };
 
       return session;
