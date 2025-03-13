@@ -21,8 +21,8 @@ const ContactPage = () => {
 
   const subjectOptions = [
     { value: "", label: "Sélectionnez un objet" },
-    { value: "contact", label: "Prise de contact" },
-    { value: "quote", label: "Demande de devis" },
+    { value: "Prise de contact", label: "Prise de contact" },
+    { value: "Demande de devis", label: "Demande de devis" },
     { value: "other", label: "Autre" },
   ];
 

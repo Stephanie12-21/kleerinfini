@@ -82,13 +82,12 @@ async function sendMessageContact({
   }
 }
 
-// Handler POST avec typage TypeScript
 export async function POST(req: Request): Promise<Response> {
   try {
     const body: EmailRequestBody = await req.json();
 
-    // Vérification des champs obligatoires
     const { name, email, phone, subject, message } = body;
+
     if (!name || !email || !phone || !subject || !message) {
       return NextResponse.json(
         { error: "Tous les champs sont requis." },

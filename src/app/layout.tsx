@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import Provider from "./context/Provider";
-import { Inter } from "next/font/google"; // ✅ Utilisation correcte de next/font/google
+import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
