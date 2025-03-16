@@ -7,17 +7,26 @@ import { useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const { data: session } = useSession();
-
   const router = useRouter();
+
   const handleGoBlog = () => router.push("/admin/blog");
-  const handleGoProfile = () => router.push("/admin/profile");
-  const handleGoResetPswrd = () => router.push("/admin/reset-password");
-  const handleGoLogin = () => router.push("/login");
+
+  function handleGoResetPswrd() {
+    if (session?.user?.id) {
+      console.log("id", session.user.id);
+      router.push(`/admin/security/${session.user.id}`);
+    }
+  }
+
+  function handleGoLogin() {
+    return router.push("/login");
+  }
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
     router.push("/login");
   };
+
   if (!session?.user) {
     return (
       <div className="container mx-auto px-4 min-h-screen flex flex-col items-center justify-center py-8">
@@ -32,27 +41,10 @@ const ProfilePage = () => {
       </div>
     );
   }
+
   return (
     <div className="container mx-auto px-4 min-h-screen flex flex-col items-center gap-4 justify-center py-8">
-      <button
-        className="bg-indigo-600 cursor-pointer text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700"
-        onClick={handleGoBlog}
-      >
-        Voir les articles
-      </button>
-      <button
-        className="bg-indigo-600 cursor-pointer text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700"
-        onClick={handleGoProfile}
-      >
-        Modifier le profil
-      </button>
-      <button
-        className="bg-indigo-600 cursor-pointer text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700"
-        onClick={handleGoResetPswrd}
-      >
-        Modifer le mot de passe
-      </button>
-      <div>
+      <div className="flex flex-col items-center">
         <Image
           src={session.user.image || "/pdp.png"}
           alt="User profile"
@@ -77,6 +69,24 @@ const ProfilePage = () => {
             <LogOutIcon />
           </button>
         </div>
+      </div>
+
+      <div className=" mx-auto px-4  flex flex-col items-center gap-4 justify-center py-8">
+        <button
+          className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700"
+          onClick={handleGoBlog}
+        >
+          Voir les articles
+        </button>
+        <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700">
+          Modifier le profil
+        </button>
+        <button
+          className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700"
+          onClick={handleGoResetPswrd}
+        >
+          Modifier le mot de passe
+        </button>
       </div>
     </div>
   );
