@@ -55,6 +55,7 @@ const ArticleDetailPage = ({ params }: ArticleDetailPageProps) => {
           setCategory(data.categorieArticle);
           setDescription(data.contenu);
           setImages(data.images.map((image: { path: string }) => image.path));
+          console.log(data);
         } else {
           console.error("Article non trouvé avec l'id annonce :", id);
         }

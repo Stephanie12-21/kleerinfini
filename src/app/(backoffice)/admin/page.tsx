@@ -5,8 +5,16 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+interface ExtendedUser {
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  id?: string | null;
+}
+
 const ProfilePage = () => {
-  const { data: session } = useSession();
+  const { data: session } = useSession() as { data: { user: ExtendedUser } };
+
   const router = useRouter();
 
   const handleGoBlog = () => router.push("/admin/blog");
