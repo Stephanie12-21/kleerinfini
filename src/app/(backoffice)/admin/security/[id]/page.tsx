@@ -13,6 +13,7 @@ interface FormData {
 const PasswordChangeForm: React.FC = () => {
   const { id } = useParams();
   const router = useRouter();
+  
   const [formData, setFormData] = useState<FormData>({
     currentPassword: "",
     newPassword: "",

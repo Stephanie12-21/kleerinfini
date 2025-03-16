@@ -18,6 +18,13 @@ const ProfilePage = () => {
     }
   }
 
+  function handleGoProfilePage() {
+    if (session?.user?.id) {
+      console.log("id", session.user.id);
+      router.push(`/admin/profile/${session.user.id}`);
+    }
+  }
+
   function handleGoLogin() {
     return router.push("/login");
   }
@@ -78,7 +85,10 @@ const ProfilePage = () => {
         >
           Voir les articles
         </button>
-        <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md transition hover:bg-indigo-700">
+        <button
+          onClick={handleGoProfilePage}
+          className="bg-indigo-600 text-white px-6 py-3 cursor-pointer rounded-lg shadow-md transition hover:bg-indigo-700"
+        >
           Modifier le profil
         </button>
         <button
