@@ -132,7 +132,7 @@ const ArticleDetailPageModif: React.FC<Props> = ({ params }) => {
       resetForm();
 
       setTimeout(() => {
-        router.push("/admin/");
+        router.push("/admin/blog");
       }, 5000);
     } catch (error) {
       alert("Erreur lors de la mise à jour de l'article");

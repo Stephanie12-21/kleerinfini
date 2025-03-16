@@ -67,7 +67,7 @@ const ArticleForm: React.FC = () => {
         alert("Article ajouté avec succès !");
         resetForm();
         setTimeout(() => {
-          router.push("/admin");
+          router.push("/admin/blog");
         }, 5000);
       } else {
         alert("Erreur lors de l'ajout de l'article.");

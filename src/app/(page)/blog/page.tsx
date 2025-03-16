@@ -4,25 +4,22 @@ import Image from "next/image";
 import { ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface ImageData {
-  path: string;
-}
+import { useRouter } from "next/navigation";
 
 interface Article {
   id: string;
   titre: string;
   contenu: string;
-  createdAt: string;
-  updatedAt: string;
+  imageUrl: string | null;
+  createdAt: Date;
   categorieArticle: string;
-  images?: ImageData[];
 }
 
 const Blog: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   const fetchArticles = async (): Promise<void> => {
     setLoading(true);
@@ -33,6 +30,7 @@ const Blog: React.FC = () => {
         throw new Error("Erreur lors de la récupération des articles.");
       }
       const data: Article[] = await response.json();
+      console.log(data);
       setArticles(data);
     } catch (error) {
       console.error(error);
@@ -46,6 +44,9 @@ const Blog: React.FC = () => {
     fetchArticles();
   }, []);
 
+  const handleSee = (id: string) => {
+    router.push(`/blog/${id}`);
+  };
   if (loading) {
     return (
       <div className="w-full max-w-md mx-auto mt-8 mb-8">
@@ -68,64 +69,55 @@ const Blog: React.FC = () => {
         Blog & Presse
       </h1>
       {error && <p className="text-red-500 text-center mb-8">{error}</p>}
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article) => (
-          <div
-            key={article.id}
-            className="overflow-hidden hover:shadow-lg transition-shadow duration-300"
-          >
-            <div className="p-0">
-              <div className="relative h-48 md:h-64">
-                {article.images?.length ? (
-                  <Image
-                    src={article.images[0].path}
-                    alt={article.titre}
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <p className="text-gray-500">Aucune image disponible</p>
-                  </div>
-                )}
-                <div className="absolute top-4 right-4 bg-primary text-primary-foreground p-2 rounded">
-                  {article.categorieArticle}
+      <div className="mt-8 w-full max-w-3xl">
+        <h2 className="text-lg font-semibold mb-4">Liste des articles</h2>
+        {articles.length > 0 ? (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {articles.map((article) => (
+              <li
+                key={article.id}
+                className="border rounded-md shadow-md overflow-hidden"
+              >
+                <Image
+                  src={article.imageUrl || "/placeholder.png"}
+                  alt={article.titre}
+                  width={300}
+                  height={200}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-md font-bold">{article.titre}</h3>
+                  <p className="text-gray-600 text-sm">
+                    {article.contenu.slice(0, 100)}...
+                  </p>
                 </div>
-              </div>
-              <div className="p-6">
-                <h2 className="text-2xl font-semibold text-primary mb-2 line-clamp-2">
-                  {article.titre}
-                </h2>
-                <p className="text-base text-muted-foreground mb-4">
-                  {article.createdAt === article.updatedAt
-                    ? `Publié le ${new Date(
-                        article.createdAt
-                      ).toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}`
-                    : `Modifié le ${new Date(
-                        article.updatedAt
-                      ).toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}`}
-                </p>
-                <p className="text-base text-muted-foreground mb-4 line-clamp-3">
-                  {article.contenu}
-                </p>
-                <Link href={`/Blog/InfoBlog/${article.id}`}>
-                  <button className="w-full hover:bg-primary hover:text-white flex items-center justify-center gap-2">
-                    Lire l&apos;article
-                    <ArrowRight className="h-4 w-4" />
+                <div>
+                  <span className="block p-4 text-gray-600 text-sm">
+                    Publié{" "}
+                    {new Date(article.createdAt).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <span className="block p-4 text-gray-600 text-sm">
+                    Catégorie: {article.categorieArticle}
+                  </span>
+                </div>
+                <div className="flex gap-2 p-4">
+                  <button
+                    onClick={() => handleSee(article.id)}
+                    className="block w-full p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition-colors"
+                  >
+                    Consulter
                   </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">Aucun article disponible.</p>
+        )}
       </div>
       <div className="mt-12 text-center">
         <Link href="/Blog">
