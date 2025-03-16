@@ -6,10 +6,9 @@ interface Params {
 }
 
 export async function GET(request: Request, { params }: { params: Params }) {
-  const { id } = await params; // Attendre la résolution de params
+  const { id } = await params;
 
   try {
-    // Parse the `id` as an integer before using it in the database query
     const article = await db.article.findUnique({
       where: { id: parseInt(id, 10) },
       include: { images: true },
@@ -31,43 +30,6 @@ export async function GET(request: Request, { params }: { params: Params }) {
     );
   }
 }
-// import { NextResponse } from "next/server";
-// import { db } from "@/lib/db"; // Assure-toi que le chemin d'import est correct
-
-// export async function GET(
-//   request: Request,
-//   { params }: { params: { id: string } }
-// ) {
-//   const { id } = params;
-
-//   try {
-//     const article = await db.article.findUnique({
-//       where: { id: parseInt(id, 10) },
-//       include: { images: true }, // Vérifie que "images" est bien une table liée
-//     });
-
-//     if (!article) {
-//       return NextResponse.json(
-//         { message: "Article non trouvé" },
-//         { status: 404 }
-//       );
-//     }
-
-//     return NextResponse.json(
-//       {
-//         ...article,
-//         images: article.images.map((img: { path: string }) => img.path), // Extraire uniquement les URLs des images
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Erreur lors de la récupération de l'article :", error);
-//     return NextResponse.json(
-//       { message: "Erreur interne du serveur" },
-//       { status: 500 }
-//     );
-//   }
-// }
 
 interface Params {
   id: string;
@@ -101,7 +63,7 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
 }
 
 export async function PUT(request: Request, { params }: { params: Params }) {
-  const { id } = await params; // Attendre la résolution de params
+  const { id } = await params;
   const articleId = parseInt(id, 10);
   const body = await request.formData();
 
