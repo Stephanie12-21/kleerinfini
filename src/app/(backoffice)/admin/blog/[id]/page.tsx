@@ -15,7 +15,7 @@ interface Article {
 }
 
 interface ArticleDetailPageProps {
-  params: Promise<{ id: string }>; // `params` est une promesse
+  params: Promise<{ id: string }>;
 }
 
 const ArticleDetailPage = ({ params }: ArticleDetailPageProps) => {
@@ -23,8 +23,8 @@ const ArticleDetailPage = ({ params }: ArticleDetailPageProps) => {
 
   useEffect(() => {
     async function getId() {
-      const resolvedParams = await params; // Attendre que `params` soit résolu
-      setId(resolvedParams.id); // Mettre à jour l'ID après la résolution
+      const resolvedParams = await params;
+      setId(resolvedParams.id);
     }
 
     getId();

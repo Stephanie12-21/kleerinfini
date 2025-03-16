@@ -15,8 +15,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const session = await getServerSession(); // ✅ Récupération correcte de la session
-
+  const session = await getServerSession();
   return (
     <html lang="fr">
       <body className={`${inter.className} antialiased`}>

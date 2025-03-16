@@ -1,18 +1,49 @@
+// import { NextResponse } from "next/server";
+// import { db } from "@/lib/db";
+
+// interface Params {
+//   id: string;
+// }
+
+// export async function GET(request: Request, { params }: { params: Params }) {
+//   const { id } = await params; // Attendre la résolution de params
+
+//   try {
+//     // Parse the `id` as an integer before using it in the database query
+//     const article = await db.article.findUnique({
+//       where: { id: parseInt(id, 10) },
+//       include: { images: true },
+//     });
+
+//     if (!article) {
+//       return NextResponse.json(
+//         { message: "Article non trouvé" },
+//         { status: 404 }
+//       );
+//     }
+
+//     return NextResponse.json(article, { status: 200 });
+//   } catch (error) {
+//     console.error("Erreur lors de la récupération de l'article :", error);
+//     return NextResponse.json(
+//       { message: "Erreur interne du serveur" },
+//       { status: 500 }
+//     );
+//   }
+// }
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db } from "@/lib/db"; // Assure-toi que le chemin d'import est correct
 
-interface Params {
-  id: string;
-}
-
-export async function GET(request: Request, { params }: { params: Params }) {
-  const { id } = await params; // Attendre la résolution de params
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
 
   try {
-    // Parse the `id` as an integer before using it in the database query
     const article = await db.article.findUnique({
       where: { id: parseInt(id, 10) },
-      include: { images: true },
+      include: { images: true }, // Vérifie que "images" est bien une table liée
     });
 
     if (!article) {
@@ -22,7 +53,13 @@ export async function GET(request: Request, { params }: { params: Params }) {
       );
     }
 
-    return NextResponse.json(article, { status: 200 });
+    return NextResponse.json(
+      {
+        ...article,
+        images: article.images.map((img: { path: string }) => img.path), // Extraire uniquement les URLs des images
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Erreur lors de la récupération de l'article :", error);
     return NextResponse.json(
@@ -32,8 +69,12 @@ export async function GET(request: Request, { params }: { params: Params }) {
   }
 }
 
+interface Params {
+  id: string;
+}
+
 export async function DELETE(request: Request, { params }: { params: Params }) {
-  const { id } = await params; // Attendre la résolution de params
+  const { id } = await params;
   const articleId = parseInt(id, 10);
 
   try {
